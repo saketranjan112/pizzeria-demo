@@ -1,0 +1,87 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Foo /> renders build component 1`] = `
+<div
+  className="container"
+>
+  <p
+    className="text-secondary my-2 text-center"
+  >
+    Pizzeria now gives you options to build your own pizza. Customize your pizza by choosing ingredients from the list given below.
+  </p>
+  <table
+    className="table table-sm table-bordered table-striped align-middle mx-auto rounded"
+    style={
+      Object {
+        "width": "70%",
+      }
+    }
+  >
+    <tbody>
+      <tr>
+        <td
+          colSpan="3"
+          rowSpan="2"
+        >
+          <p
+            className="fs-3 text-secondary text-start mt-2"
+          >
+            Total Cost : 
+            <span
+              className="text-success"
+            >
+              <sup>
+                ₹
+              </sup>
+              0
+              .00
+            </span>
+          </p>
+          <div
+            className="d-grid"
+          >
+            <p
+              className="text-danger"
+              style={
+                Object {
+                  "fontSize": 12,
+                }
+              }
+            >
+              Please Signin to build your pizza.
+            </p>
+            <button
+              className="btn btn-outline-dark bg-warning"
+              disabled={true}
+              onClick={[Function]}
+            >
+              <div>
+                Build Pizza
+              </div>
+              <div
+                style={
+                  Object {
+                    "fontSize": 12,
+                  }
+                }
+              >
+                & Add to cart
+              </div>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`<Foo /> renders order component 1`] = `
+<div
+  className="container"
+>
+  <div
+    className="row justify-content-center"
+  />
+</div>
+`;
