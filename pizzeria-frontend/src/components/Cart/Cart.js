@@ -5,12 +5,10 @@ import { useNavigate } from 'react-router-dom';
 
 import CartItem from './CartItem'
 
-export default function Cart() {
+export default function Cart({updateCart}) {
   const [cartData, setCartData] = useState();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user'))?.result);
   const [total, setTotal] = useState(0);
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     setUser(JSON.parse(localStorage.getItem('user'))?.result);
@@ -38,7 +36,7 @@ export default function Cart() {
               <div className="col-8 mx-auto">
                 {cartData.items.map((item) => {
                     return(
-                      <CartItem pizzaId={item.id} cartId={user.cartId} qty={item.qty} key={item.id} addToTotal={setTotal}/>
+                      <CartItem updateCart={updateCart} pizza={item} cartId={user.cartId} key={item.id} addToTotal={setTotal}/>
                     )
                   })
                 }
@@ -46,6 +44,8 @@ export default function Cart() {
               <div className="col-4 mt-3 mx-auto">
                 <div className="card">
                   <p className="my-2 fs-4 d-flex justify-content-around"><span className="text-secondary">Cart Total:</span><span className="text-primary">{total}</span></p>
+                  <hr></hr>
+                  <button className="btn btn-success text-white m-2 mt-0">Checkout &#8680;</button>
                 </div>
               </div>
             </div>

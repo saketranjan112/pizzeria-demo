@@ -1,13 +1,12 @@
 import { AUTH } from '../constants/actionTypes';
 import * as api from '../api/index.js';
 
-export const signIn = (formData, navigate, setInvalidEmailMsg, setInvalidPasswordMsg) => async (dispatch) => {
+export const signIn = (formData,navigate, setInvalidEmailMsg, setInvalidPasswordMsg, updateCart) => async (dispatch) => {
   try {
     const { data } = await api.signIn(formData);
     console.log('data fetched')
-
-    dispatch({ type: AUTH, data });
-
+    await dispatch({ type: AUTH, data });
+    await updateCart(prevState => prevState + 1);
     navigate('/');
   } catch (error) {
     console.log(error.response);
@@ -17,12 +16,11 @@ export const signIn = (formData, navigate, setInvalidEmailMsg, setInvalidPasswor
   }
 };
 
-export const register = (formData, navigate, setInvalidEmailMsg) => async (dispatch) => {
+export const register = (formData, navigate, setInvalidEmailMsg, updateCart) => async (dispatch) => {
   try {
     const { data } = await api.register(formData);
-
-    dispatch({ type: AUTH, data });
-
+    await dispatch({ type: AUTH, data });
+    await updateCart(prevState => prevState + 1);
     navigate('/');
   } catch (error) {
     console.log(error);

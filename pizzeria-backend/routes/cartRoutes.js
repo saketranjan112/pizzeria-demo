@@ -8,6 +8,5 @@ router.post('/addToCart', addToCart);
 router.post('/deleteFromCart', deleteFromCart);
 router.post('/decreaseQuantity', decreaseQuantity);
 router.post('/increaseQuantity', increaseQuantity);
-router.post('/addCustomToCart', addCustomToCart);
 router.get('/:cartId/:pizzaId', test);
 module.exports = router;

@@ -3,11 +3,6 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-// import express from 'express';
-// import bodyParser from 'bodyParser';
-// import mongoose from 'mongoose';
-// import cors from 'cors';
-
 //route imports
 const pizzaRoutes = require('./routes/pizzaRoutes.js');
 const toppingRoutes = require('./routes/toppingRoutes.js');

@@ -1,6 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-export default function Home() {
+export default function Home({updateCart}) {
+  const navigate = useNavigate();
+  useEffect(() => {
+    updateCart(prevState => prevState + 1);
+  }, [navigate])
+  
   return (
     <div className="container p-5 text-start">
       <p className="display-6 text-center">Our Story</p>

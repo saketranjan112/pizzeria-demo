@@ -37,12 +37,13 @@ module.exports.register = async (req, res) => {
 
         const count = await User.count();
 
-        const result = await User.create({email, password, name, userId: count +1, cartId: count +1});
+        const result = await User.create({email, password, name, userId: count + 1, cartId: count + 1});
         Cart.create({cartId: count + 1, userId: count + 1, items: []});
         
 
         res.status(200).json({result});
     } catch (error) {
+        console.log(error);
         res.status(500).json({message: 'Something went wrong'});
     }
 }

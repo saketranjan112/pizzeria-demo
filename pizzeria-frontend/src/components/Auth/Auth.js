@@ -4,8 +4,8 @@ import { useDispatch } from 'react-redux';
 
 import { register, signIn } from '../../actions/authActions'
 
-const initialState = {name:'', email:'', password:''}
-export default function Auth() {
+const initialState = {name:'', email:'', password:'', confirmPassword: ''}
+export default function Auth({updateCart}) {
     const [formData, setFormData] = useState(initialState);
     const [isRegister, setIsRegister] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -21,12 +21,11 @@ export default function Auth() {
         console.log(formData)
 
         if(isRegister) {
-            dispatch(register(formData, navigate, setInvalidEmailMsg));
-            setErrorMessage('Email is already registered')
+            dispatch(register(formData, navigate, setInvalidEmailMsg, updateCart));
         }else{
-            console.log(errorMessage)
-            dispatch(signIn(formData, navigate, setInvalidEmailMsg, setInvalidPasswordMsg));
+            dispatch(signIn(formData, navigate, setInvalidEmailMsg, setInvalidPasswordMsg, updateCart));
         }
+        console.log('still here')
     }
 
     const handleChange = (e) => {
@@ -34,7 +33,8 @@ export default function Auth() {
     }
 
     const matchPassword = (e) => {
-        if(e.target.value !== formData.password){
+        setFormData({...formData, [e.target.name]: e.target.value});
+        if(e.target.value !== formData.password && e.target.value !== formData.confirmPassword && isRegister) {
             setErrorMessage('Passwords Mismatch');
         }else{
             setErrorMessage('');
@@ -45,6 +45,9 @@ export default function Auth() {
         setFormData(initialState);
         setIsRegister((prevIsRegister) => !prevIsRegister);
         setShowPassword(false);
+        setErrorMessage('');
+        setInvalidEmailMsg('');
+        setInvalidPasswordMsg('');
     }
 
     const handleShowPassword = () => {
@@ -58,20 +61,20 @@ export default function Auth() {
             }</h3>
             { isRegister && (
                 <div className="mt-3 ms-3 me-3">
-                    <input type="text" className="form-control" id="name" name="name" placeholder='Enter Your Name' onChange={handleChange} required/>
+                    <input type="text" className="form-control" value={formData.name} id="name" name="name" placeholder='Enter Your Name' onChange={handleChange} required/>
                 </div>
             )}
             <div className="mt-3 mb-3 me-3 ms-3">
-                <input type="email" className="form-control m-auto" id="email" name="email" placeholder='Enter Your Email' onChange={handleChange} required/>
+                <input type="email" className="form-control m-auto" value={formData.email} id="email" name="email" placeholder='Enter Your Email' onChange={handleChange} required/>
                 <div id="emailHelp" className="form-text text-danger">{invalidEmailMsg}</div>
             </div>
             <div className="mb-3 ms-3 me-3">
-                <input type={showPassword ? "text" : "password"} className="form-control" id="password" name="password" placeholder='Enter Password' onChange={handleChange} required/>
+                <input type={showPassword ? "text" : "password"} className="form-control" value={formData.password} id="password" name="password" placeholder='Enter Password' onChange={matchPassword} required/>
                 <div id="emailHelp" className="form-text text-danger">{invalidPasswordMsg}</div>
             </div>
             { isRegister && (
                 <div className="mb-3 ms-3 me-3">
-                    <input type={showPassword ? "text" : "password"} className="form-control" id="confirmPassword" name="confirmPassword" placeholder='Confirm Password' onChange={matchPassword} required/>
+                    <input type={showPassword ? "text" : "password"} className="form-control" value={formData.confirmPassword} id="confirmPassword" name="confirmPassword" placeholder='Confirm Password' onChange={matchPassword} required/>
                     <div id="emailHelp" className="form-text text-danger">{errorMessage}</div>
                 </div>
             )}

@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import * as api from '../api/index';
 
-export default function Build() {
+export default function Build({updateCart}) {
     const [toppingData, setToppingData] = useState([]);
     const [selectedToppings, setSelectedToppings] = useState([]);
     const [totalCost, setTotalCost] = useState(0);
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('user'))?.result);
 
-    const handleCheck = (e, price, name) => {
+    const handleCheck = (e, price, name, id) => {
         console.log(price)
         console.log(e.target.checked)
         if(e.target.checked){
             setTotalCost(totalCost + price);
-            setSelectedToppings([...selectedToppings, name]);
+            setSelectedToppings([...selectedToppings, {name, id}]);
         }else{
             setTotalCost(totalCost - price);
-            const newArray = selectedToppings.filter((topping) => topping !== name);
+            const newArray = selectedToppings.filter((topping) => topping.id !== id);
             setSelectedToppings(newArray);
         }
         console.log(selectedToppings)
@@ -29,15 +30,36 @@ export default function Build() {
         setUser(JSON.parse(localStorage.getItem('user'))?.result);
     },[])
 
-    const handleClick = () => {
-        console.log(totalCost)
-        console.log(selectedToppings)
-        console.log(user.name, user.cartId)
-        const pizzaName = "Naruto's Recipe";
+    const handleClick = async () => {
+
+        const pizzaName = `${user.name}'s Recipe`;
         const cartId = user.cartId;
-        axios.post('http://localhost:4000/cart/addCustomToCart',{ cartId: cartId, name: pizzaName, toppings: selectedToppings, price: totalCost})
-        .then((response) => console.log(response))
-        .catch((error) => console.log(error));
+        let idArray = [];
+        let toppings = [];
+        selectedToppings.forEach((topping) => {
+            toppings.push(topping.name);
+            idArray.push(topping.id);
+        })
+        idArray = idArray.sort();
+        let id = '';
+        idArray.forEach(tid => {
+            id += tid % 20;
+        })
+        const pizza = {
+            id: id,
+            name: pizzaName,
+            image: 'https://image.shutterstock.com/z/stock-photo-top-view-with-a-sliced-pizza-primavera-on-a-blue-table-vegetarian-pizza-flat-lay-sliced-pizza-1801094347.jpg',
+            topping: toppings,
+            price: totalCost,
+            type: idArray.includes(101) || idArray.includes(107) ? 'non-veg' : 'veg'
+        }
+        console.log(pizza);
+
+        await api.addToCart(pizza, cartId);
+        updateCart((prevState) => {
+            console.log('updateCart called');
+            return prevState + 1;
+        });
     }
     
   return (
@@ -52,12 +74,15 @@ export default function Build() {
                                 <img src={topping.image} className="card-img-top" alt="..." style={{"height": 55, "width": 55}}/>
                             </td>
                             <td>
+                                <div className={topping.id === 107 || topping.id === 101? 'border border-2 border-danger me-3' : 'border border-2 border-success me-3'} style={{"height": 20, "width": 20, "float": "left"}}>
+                                    <div className={topping.id === 107 || topping.id === 101? 'bg-danger rounded-circle mx-auto mt-1' : 'bg-success rounded-circle mx-auto mt-1'} style={{"height": 10, "width": 10}}></div>
+                                </div>
                                 <span>{topping.tname}</span>&nbsp;&nbsp; 
                                 <span>(<b><sup>&#x20B9;</sup>{topping.price}.00</b>)</span>
                             </td>
                             <td>
                                 <div className="form-check d-flex justify-content-center">
-                                    <input className="form-check-input" type="checkbox" defaultChecked={false} onChange={(e) => handleCheck(e, topping.price, topping.tname)} />&nbsp;&nbsp;
+                                    <input className="form-check-input" type="checkbox" defaultChecked={false} onChange={(e) => handleCheck(e, topping.price, topping.tname, topping.id)} />&nbsp;&nbsp;
                                     <label className="form-check-label text-warning" htmlFor="flexCheckDefault">
                                         Add
                                     </label>
